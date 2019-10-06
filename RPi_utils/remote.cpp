@@ -4,12 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-void Sleep(float s) 
-{ 
-    int sec = int(s*1000000); 
-    usleep(sec); 
-} 
 
+void Sleep(float s);
+
+void sendArray(int arr[]);
 
 int main(int argc, char *argv[]) {
 
@@ -22,64 +20,58 @@ int main(int argc, char *argv[]) {
 
    std::string arg1 = argv[1];
    std::string arg2 = argv[2];
- 
+
    int protocol = 3;
    int PIN = 0;
    int pulselength = 0;
-   
+
    if (wiringPiSetup () == -1) return 1;
    RCSwitch mySwitch = RCSwitch();
    mySwitch.setProtocol(protocol);
    mySwitch.enableTransmit(PIN);
-   
-   if (arg1 == "a" && arg2=="on") {
-      for (int i = 0; i < 4; ++i) {
-      mySwitch.send(a_on[i], 24);
-      Sleep(0.1);
-      printf("%d \n", a_on[i]);
-      }
-   }
 
+   if (arg1 == "a" && arg2=="on") {
+      sendArray(a_on);
+   }
    else if (arg1 == "a" && arg2=="off") {
-      
-      for (int i = 0; i < 4; ++i) {
-      mySwitch.send(a_off[i], 24);
-      printf("%d \n", a_off[i]);
-      }
+      sendArray(b_off);
    }
    else if (arg1 == "b" && arg2=="on") {
-      for (int i = 0; i < 4; ++i) {
-      mySwitch.send(b_on[i], 24);
-      printf("%d \n", b_on[i]);
-      }
+      sendArray(b_on);
    }
    else if (arg1 == "b" && arg2=="off") {
-      for (int i = 0; i < 4; ++i) {
-      mySwitch.send(b_off[i], 24);
-      printf("%d \n", b_off[i]);
-      }
+      sendArray(b_off);
    }
    else if (arg1 == "c" && arg2=="on") {
-      for (int i = 0; i < 4; ++i) {
-      mySwitch.send(c_on[i], 24);
-      printf("%d \n", c_on[i]);
-      }
+      sendArray(c_off);
    }
    else if (arg1 == "c" && arg2=="off") {
-      for (int i = 0; i < 4; ++i) {
-      mySwitch.send(c_off[i], 24);
-      printf("%d \n", c_off[i]);
-      }
-
-
-
+      sendArray(c_off);
    }else{
-   printf("Nothing");
+   printf("No input");
    }
-   printf("%s \n",argv[1]);
-   printf("%s \n", argv[2]);
+
    return 0;
 
 }
 
+void sendArray(int arr[]){
+   int protocol = 3;
+   int PIN = 0;
+   int pulselength = 0;
+
+   RCSwitch mySwitch = RCSwitch();
+   mySwitch.setProtocol(protocol);
+   mySwitch.enableTransmit(PIN);
+
+   for (int i = 0; i < 4; ++i) {
+      mySwitch.send(arr[i], 24);
+      }
+}
+
+void Sleep(float s)
+{
+    int sec = int(s*1000000);
+    usleep(sec);
+}
 
